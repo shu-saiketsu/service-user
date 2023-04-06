@@ -1,7 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Saiketsu.Service.User.Application.Users.Command.BlockUser;
 using Saiketsu.Service.User.Application.Users.Command.CreateUser;
 using Saiketsu.Service.User.Application.Users.Command.DeleteUser;
+using Saiketsu.Service.User.Application.Users.Command.UnblockUser;
 using Saiketsu.Service.User.Application.Users.Query.GetUser;
 using Saiketsu.Service.User.Application.Users.Query.GetUsers;
 
@@ -52,6 +54,30 @@ public sealed class UsersController : ControllerBase
         return Ok(user);
     }
 
+    [HttpPost("{id}/block")]
+    public async Task<IActionResult> Block(string id)
+    {
+        var command = new BlockUserCommand { Id = id };
+        var blockedSuccessfully = await _mediator.Send(command);
+
+        if (!blockedSuccessfully)
+            return BadRequest();
+
+        return Ok();
+    }
+
+    [HttpPost("{id}/unblock")]
+    public async Task<IActionResult> Unblock(string id)
+    {
+        var command = new UnblockUserCommand { Id = id };
+        var unblockedSuccessfully = await _mediator.Send(command);
+
+        if (!unblockedSuccessfully)
+            return BadRequest();
+
+        return Ok();
+    }
+
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(string id)
     {
@@ -59,7 +85,7 @@ public sealed class UsersController : ControllerBase
 
         var response = await _mediator.Send(request);
 
-        if (response) 
+        if (response)
             return Ok();
 
         return BadRequest();

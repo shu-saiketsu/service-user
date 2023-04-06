@@ -9,4 +9,6 @@ public interface IAuth0Service
     Task<List<UserEntity>> GetUsersAsync();
     Task<UserEntity?> CreateUserAsync(string email, string password);
     Task<bool> DeleteUserAsync(string id);
+    Task<bool> BlockUserAsync(string id);
+    Task<bool> UnblockUserAsync(string id);
 }

@@ -3,6 +3,7 @@ using Microsoft.OpenApi.Models;
 using Saiketsu.Service.User.Application;
 using Saiketsu.Service.User.Application.Interfaces;
 using Saiketsu.Service.User.Domain.Options;
+using Saiketsu.Service.User.Infrastructure;
 using Saiketsu.Service.User.Infrastructure.Services;
 using Serilog;
 using Serilog.Events;
@@ -49,9 +50,11 @@ void AddServices(WebApplicationBuilder builder)
     builder.Services.Configure<Auth0Options>(builder.Configuration.GetSection(Auth0Options.Position));
     builder.Services.Configure<Auth0ManagementOptions>(
         builder.Configuration.GetSection(Auth0ManagementOptions.Position));
+    builder.Services.Configure<RabbitMQOptions>(builder.Configuration.GetSection(RabbitMQOptions.Position));
 
     builder.Services.AddSingleton<Auth0TokenService>();
     builder.Services.AddScoped<IAuth0Service, Auth0Service>();
+    builder.Services.AddSingleton<IEventBus, RabbitEventBus>();
 }
 
 void AddMiddleware(WebApplication app)

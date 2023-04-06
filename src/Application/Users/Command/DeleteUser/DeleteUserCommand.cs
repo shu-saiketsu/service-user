@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MediatR;
+﻿using MediatR;
 
-namespace Saiketsu.Service.User.Application.Users.Command.DeleteUser
+namespace Saiketsu.Service.User.Application.Users.Command.DeleteUser;
+
+public sealed class DeleteUserCommand : IRequest<bool>
 {
-    public sealed class DeleteUserCommand : IRequest<bool>
-    {
-        public string Id { get; set; } = null!;
-    }
+    public string Id { get; set; } = null!;
 }

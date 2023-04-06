@@ -29,7 +29,9 @@ public sealed class Auth0Service : IAuth0Service
             return new UserEntity
             {
                 Id = user.UserId,
-                Email = user.Email
+                Email = user.Email,
+                UpdatedAt = user.UpdatedAt,
+                CreatedAt = user.CreatedAt
             };
         }
         catch (Exception)
@@ -58,10 +60,12 @@ public sealed class Auth0Service : IAuth0Service
             return users.Select(x => new UserEntity
             {
                 Id = x.UserId,
-                Email = x.Email
+                Email = x.Email,
+                UpdatedAt = x.UpdatedAt,
+                CreatedAt = x.CreatedAt
             }).ToList();
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             return new List<UserEntity>();
         }
@@ -107,7 +111,49 @@ public sealed class Auth0Service : IAuth0Service
 
             return true;
         }
-        catch (Exception ex)
+        catch (Exception)
+        {
+            return false;
+        }
+    }
+
+    public async Task<bool> BlockUserAsync(string id)
+    {
+        try
+        {
+            var client = await GetClientAsync();
+
+            var blockRequest = new UserUpdateRequest
+            {
+                Blocked = true
+            };
+
+            await client.Users.UpdateAsync(id, blockRequest);
+
+            return true;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+    }
+
+    public async Task<bool> UnblockUserAsync(string id)
+    {
+        try
+        {
+            var client = await GetClientAsync();
+
+            var blockRequest = new UserUpdateRequest
+            {
+                Blocked = false
+            };
+
+            await client.Users.UpdateAsync(id, blockRequest);
+
+            return true;
+        }
+        catch (Exception)
         {
             return false;
         }
