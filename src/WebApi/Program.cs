@@ -54,6 +54,8 @@ void AddServices(WebApplicationBuilder builder)
     builder.Services.Configure<Auth0Options>(builder.Configuration.GetSection(Auth0Options.Position));
     builder.Services.Configure<Auth0ManagementOptions>(
         builder.Configuration.GetSection(Auth0ManagementOptions.Position));
+    builder.Services.Configure<Auth0RolesOptions>(
+        builder.Configuration.GetSection(Auth0RolesOptions.Position));
     builder.Services.Configure<RabbitMQOptions>(builder.Configuration.GetSection(RabbitMQOptions.Position));
 
     builder.Services.AddSingleton<Auth0TokenService>();
