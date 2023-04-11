@@ -27,11 +27,19 @@ static void InjectSerilog(WebApplicationBuilder builder)
         .WriteTo.Console());
 }
 
+static void SubscribeEventBus(IHost app)
+{
+    using var scope = app.Services.CreateScope();
+    var eventBus = scope.ServiceProvider.GetRequiredService<IEventBus>();
+}
+
 void AddServices(WebApplicationBuilder builder)
 {
     builder.Services.AddRouting(options => options.LowercaseUrls = true);
     builder.Services.AddControllers();
     builder.Services.AddEndpointsApiExplorer();
+
+    builder.Services.AddHealthChecks();
 
     builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(IApplicationMarker).Assembly));
     builder.Services.AddValidatorsFromAssemblyContaining<IApplicationMarker>();
@@ -74,6 +82,7 @@ void AddMiddleware(WebApplication app)
     }
 
     app.MapControllers();
+    app.MapHealthChecks("/health");
 }
 
 try
@@ -88,6 +97,7 @@ try
     var app = builder.Build();
 
     AddMiddleware(app);
+    SubscribeEventBus(app);
 
     app.Run();
 }
